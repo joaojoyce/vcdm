@@ -1,0 +1,22 @@
+{
+    "name": "vcdm/vcdm",
+    "description": "A way to design models using event source",
+    "type": "project",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "VCDM\\": "vcdm/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "VCDM\\Laravel\\VcdmServiceProvider"
+            ],
+            "aliases": {
+                "DomainModificationStream": "VCDM\\Laravel\\Facade\\DomainModificationStream"
+            }
+
+        }
+    }
+}
