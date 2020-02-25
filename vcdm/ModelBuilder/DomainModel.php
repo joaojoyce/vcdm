@@ -5,13 +5,11 @@ class DomainModel
 
     private $entities;
 
-    private $value_objects;
 
     private $relationships;
 
-    public function __construct($entities,$value_objects,$relationships) {
+    public function __construct($entities,$relationships) {
         $this->entities = $entities;
-        $this->value_objects = $value_objects;
         $this->relationships = $relationships;
     }
 
@@ -19,24 +17,42 @@ class DomainModel
         return $this->entities;
     }
 
-    public function getValueObjects() {
-        return $this->value_objects;
-    }
-
     public function getRelationships() {
         return $this->relationships;
+    }
+
+
+    public function addRelationships($relationship) {
+        $this->relationships[] = $relationship;
     }
 
     public function addEntity($entity) {
         $this->entities[] = $entity;
     }
 
-    public function addValueObject($value_object) {
-        $this->value_objects[] = $value_object;
+    public function removeEntity($name)
+    {
+        $new_entities = [];
+        foreach($this->entities as $entity) {
+            if($entity['name'] != $name) {
+                $new_entities[] = $entity;
+            }
+        }
+        $this->entities = $new_entities;
     }
 
-    public function addRelationships($relationship) {
-        $this->relationships[] = $relationship;
+    public function editEntity($from, $to)
+    {
+        $new_entities = [];
+        foreach($this->entities as $entity) {
+            if($entity['name'] != $from['name']) {
+                $new_entities[] = $entity;
+            } else {
+                $new_entities[] = $to;
+            }
+        }
+        $this->entities = $new_entities;
+
     }
 
 }

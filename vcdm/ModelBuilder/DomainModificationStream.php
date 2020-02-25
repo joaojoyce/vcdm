@@ -31,7 +31,7 @@ class DomainModificationStream
         if($checkpoint) {
             $domain_model = $checkpoint->getDomainModel();
         } else {
-            $domain_model = new DomainModel([],[],[]);
+            $domain_model = new DomainModel([],[]);
         }
 
         $this->checkEventValidity($domain_model,$event_array);
@@ -39,9 +39,10 @@ class DomainModificationStream
 
         /** @var DomainModificationEvent $event */
         foreach($event_array as $event) {
+            $this->domain_model_materializer->handleEvent($domain_model,$event);
+
             $domain_model = $event->handle($domain_model);
             $event_id = $this->event_store_repository->storeEvent($event);
-            $this->domain_model_materializer->handleEvent($event);
         }
 
         if($event_id) {
@@ -53,10 +54,15 @@ class DomainModificationStream
 
     private function checkEventValidity($domain_model, $event_array)
     {
+
+        $new_model = clone $domain_model;
+
         /** @var DomainModificationEvent $event */
         foreach($event_array as $event) {
-            if(!$event->isDataValid() || !$event->isValid($domain_model)) {
+            if(!$event->isDataValid() || !$event->isValid($new_model)) {
                 throw new DomainModificationEventException($event);
+            } else {
+                $new_model = $event->handle($new_model);
             }
         }
     }

@@ -36,7 +36,7 @@ abstract class DomainModificationEvent
 
     public function isValid(DomainModel $domain_model)
     {
-        return $domain_model;
+        return false;
     }
 
     public function isDataValid() {
